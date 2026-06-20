@@ -29,5 +29,15 @@ namespace GithubAnalyzer.Services
             //Console.WriteLine(resposta);
             return user;
         }
+        public async Task<List<GithubRepository>> GetUserReposAsync(string login)
+        {
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Add("User-Agent", "C# App");
+            string url = $"https://api.github.com/users/{login}/repos";
+            string resposta = await client.GetStringAsync(url);
+            GithubRepository[] repos = JsonSerializer.Deserialize<GithubRepository[]>(resposta, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            List<GithubRepository> reposList = repos.ToList();
+            return reposList;
+        }
     }
 }
